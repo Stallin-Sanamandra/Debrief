@@ -23,9 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Compile renderer
+        run: npm run build:renderer
+
       - name: Build installer
-        run: npm run dist
+        run: npx electron-builder --publish never
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Upload installer
