@@ -1,0 +1,29 @@
+{
+  "name": "debrief",
+  "productName": "Debrief",
+  "version": "1.0.0",
+  "description": "A local AI meeting notepad. Take notes, capture a transcript, and let Claude enhance them. Everything is stored as files on your own machine.",
+  "main": "main.js",
+  "author": "Stallin",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build:renderer": "babel src/app.jsx --presets @babel/preset-react -o renderer/app.js",
+    "dist": "npm run build:renderer && electron-builder"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.local.debrief",
+    "productName": "Debrief",
+    "files": ["main.js", "preload.js", "renderer/**/*"],
+    "directories": { "output": "dist" },
+    "mac": { "target": "dmg", "category": "public.app-category.productivity" },
+    "win": { "target": "nsis" },
+    "linux": { "target": "AppImage" }
+  }
+}
