@@ -1,0 +1,54 @@
+{
+  "name": "debrief",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local-first meeting capture for macOS: mixes microphone + system loopback audio and transcribes on-device with Whisper (Metal, fully local, no API key).",
+  "main": "src/main/index.js",
+  "author": "Stallin",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "setup:whisper": "bash scripts/setup-whisper.sh",
+    "test": "node test/wav.test.js && node test/dedup.test.js && node test/summary.test.js && node test/vad.test.js && node test/glossary.test.js && node test/segmenter.test.js && node test/analytics.test.js && node test/email.test.js && node test/actions.test.js && node test/diarize.test.js && node test/speakers.test.js && node test/crm.test.js && node test/search.test.js && node test/ask.test.js && node test/briefs.test.js && node test/bleed.test.js && node test/voiceid.test.js && node test/cluster.test.js && node test/tags.test.js",
+    "check": "node scripts/syntax-check.js",
+    "dist": "electron-builder --mac --arm64"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.debrief.app",
+    "productName": "Debrief",
+    "afterPack": "build/afterPack.js",
+    "files": [
+      "src/**/*",
+      "!**/*.test.js"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor/whisper.cpp/build/bin/whisper-server",
+        "to": "whisper/whisper-server"
+      },
+      {
+        "from": "vendor/whisper.cpp/models/ggml-small.en.bin",
+        "to": "whisper/ggml-small.en.bin"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        { "target": "dmg", "arch": ["arm64"] },
+        { "target": "dir", "arch": ["arm64"] }
+      ],
+      "identity": null,
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Debrief records your microphone so it can transcribe your side of meetings on-device.",
+        "NSAudioCaptureUsageDescription": "Debrief captures system audio so it can transcribe the other participants on-device.",
+        "NSScreenCaptureUsageDescription": "Debrief uses screen-audio capture to record meeting audio. No video is stored.",
+        "LSUIElement": false
+      }
+    }
+  }
+}

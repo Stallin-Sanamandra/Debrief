@@ -1,0 +1,42 @@
+# --- Dependencies / build output ---
+node_modules/
+dist/
+build.log
+*.log
+
+# --- Vendored whisper.cpp build + bundled / downloaded model binaries ---
+# Rebuilt locally via scripts/setup-whisper.sh; far too large to commit (~466 MB model).
+# *.onnx = downloaded speaker-embedding model (voice fingerprinting), download-on-first-use.
+vendor/
+*.bin
+*.gguf
+*.onnx
+models/
+
+# --- Voice fingerprinting: enrolled voiceprints are PERSONAL biometric data ---
+# Stored in macOS userData (outside the repo); never commit if one ever lands here.
+voiceprints/
+*.voiceprints.json
+
+# --- Local session data, recordings, transcripts ---
+# The app writes these to macOS userData and ~/Documents/Debrief Sessions (outside the repo).
+# Never commit them if they ever land here.
+sessions/
+Debrief Sessions/
+*.wav
+*.m4a
+*.aiff
+
+# --- Secrets / credentials / certificates (NEVER commit) ---
+.env
+.env.*
+*.pem
+*.p12
+*.cer
+*.crt
+*.csr
+*.key
+keys.enc.json
+
+# --- macOS cruft ---
+.DS_Store

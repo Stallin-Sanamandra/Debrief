@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';" />
+  <title>Debrief</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <button id="brandHome" class="brand" title="Back to Session"><img src="assets/logo.svg" alt="Debrief" /></button>
+    <div class="nav">
+      <button id="navSession" class="active">Session</button>
+      <button id="navHistory">History</button>
+      <button id="navActions">Actions</button>
+      <button id="navSettings">Settings</button>
+    </div>
+  </div>
+
+  <!-- ===== SESSION ===== -->
+  <section id="viewSession" class="view active">
+    <div class="session-head">
+      <input id="sessTitle" class="title-input" placeholder="Untitled meeting" />
+      <div class="head-row">
+        <select id="sessTemplate" class="tpl-select"></select>
+        <span class="engine" id="engineStatus">engine: …</span>
+      </div>
+      <input id="sessCustomPrompt" class="custom-prompt" type="text" placeholder="Custom summary instruction for this meeting (optional)" />
+    </div>
+    <div class="record-row">
+      <button id="recordBtn" class="record"><span class="dot"></span><span id="recordLabel">Start capture</span></button>
+      <div id="timer" class="timer">00:00</div>
+    </div>
+    <div id="attendeeBriefs" class="briefs"></div>
+    <div class="subtabs">
+      <button id="tabTranscript" class="active">Transcript</button>
+      <button id="tabNotes">My Notes</button>
+      <button id="tabSummary">Summary</button>
+    </div>
+    <div id="paneTranscript" class="pane">
+      <div id="transcript"></div>
+      <div id="transcriptEmpty" class="muted">Transcript appears here while recording.</div>
+    </div>
+    <div id="paneNotes" class="pane hidden">
+      <textarea id="myNotes" class="notes-area" placeholder="Type your notes during the meeting… they're merged into the summary on stop."></textarea>
+    </div>
+    <div id="paneSummary" class="pane hidden">
+      <div id="analytics" class="stats hidden"></div>
+      <div id="summaryActions" class="hidden" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap"><button id="draftEmailBtn" class="btn small accent">✉ Draft follow-up email</button><button id="draftCrmBtn" class="btn small">🗂 Deal notes</button></div>
+      <div id="summary" class="sum"><div class="muted">The AI summary appears here after you stop.</div></div>
+    </div>
+    <div id="message" class="section hidden" style="border:0"></div>
+    <div class="footer">
+      <div class="chips">
+        <span class="pill" id="chipMic">mic: …</span>
+        <span class="pill" id="chipScreen">screen: …</span>
+      </div>
+      <span class="status" id="savePath"></span>
+    </div>
+  </section>
+
+  <!-- ===== HISTORY ===== -->
+  <section id="viewHistory" class="view">
+    <div class="settings-head"><strong>Meetings</strong>
+      <button id="historyRefresh" class="btn small ghost" style="margin-left:auto">Refresh</button>
+    </div>
+    <div class="search-bar">
+      <input id="historySearch" type="text" placeholder="Search meetings, or ask a question…" />
+      <button id="searchBtn" class="btn small fixed">Search</button>
+      <button id="askBtn" class="btn small accent fixed">Ask</button>
+    </div>
+    <div id="askResult" class="ask-result hidden"></div>
+    <div class="filter-bar"><select id="folderFilter"></select><div id="tagFilter" class="tag-filter"></div></div>
+    <div id="historyList" class="list scroll"></div>
+  </section>
+
+  <!-- ===== ACTIONS (cross-meeting) ===== -->
+  <section id="viewActions" class="view">
+    <div class="settings-head"><strong>Action items</strong>
+      <span id="actionsCount" class="pill" style="margin-left:8px"></span>
+      <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer"><input type="checkbox" id="actionsHideDone" style="width:auto" /> Hide completed</label>
+    </div>
+    <div id="actionsList" class="list scroll"></div>
+  </section>
+
+  <!-- ===== DETAIL ===== -->
+  <section id="viewDetail" class="view">
+    <div class="detail-head">
+      <button id="detailBack" class="btn small ghost">‹ Back</button>
+      <span class="d-title" id="detailTitle"></span>
+    </div>
+    <div class="subtabs">
+      <button id="dtabSummary" class="active">Summary</button>
+      <button id="dtabTranscript">Transcript</button>
+      <button id="dtabNotes">My Notes</button>
+    </div>
+    <div id="dPaneSummary" class="pane"><div id="detailAnalytics" class="stats"></div><div id="detailActions" style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap"><button id="detailEmail" class="btn small accent">✉ Email</button><button id="detailCrm" class="btn small">🗂 Deal notes</button></div><div id="detailPromptRow" style="display:flex;gap:8px;margin-bottom:12px"><input id="detailPrompt" type="text" placeholder="Custom instruction to reshape this summary…" style="flex:1" /><button id="detailResummarize" class="btn small fixed">Re-summarize</button></div><div id="detailMeta" class="meta-edit"></div><div id="detailSummary" class="sum"></div></div>
+    <div id="dPaneTranscript" class="pane hidden"><div id="detailSpeakers" class="spk-bar"></div><div id="detailTranscript"></div></div>
+    <div id="dPaneNotes" class="pane hidden"><div id="detailNotes" class="muted"></div></div>
+    <div class="footer">
+      <button id="detailRename" class="btn small">Rename</button>
+      <button id="detailDelete" class="btn small danger">Delete</button>
+      <button id="copyText" class="btn small" style="margin-left:auto">Copy</button>
+      <button id="exportMd" class="btn small">.md</button>
+      <button id="exportTxt" class="btn small">.txt</button>
+    </div>
+  </section>
+
+  <!-- ===== SETTINGS ===== -->
+  <section id="viewSettings" class="view scroll">
+    <div class="settings-head"><strong>Settings</strong></div>
+    <div class="section">
+      <h3>Summary model</h3>
+      <p class="hint">Only the final text transcript is sent to a cloud model. No key set → basic keyword summary.</p>
+      <select id="summaryModel"></select>
+      <div id="modelKeyHint" class="muted" style="margin-top:6px"></div>
+    </div>
+    <div class="section">
+      <h3>API keys</h3>
+      <p class="hint">Stored encrypted on this Mac via the system keychain (safeStorage). Never shown again after saving.</p>
+      <div class="keyrow"><span class="fixed" style="width:78px;color:var(--text-2);font-size:12px">Anthropic</span><input id="keyAnthropic" type="password" placeholder="sk-ant-…" /><button class="btn small keysave" data-prov="anthropic">Save</button><span id="statAnthropic" class="pill">not set</span></div>
+      <div class="keyrow"><span class="fixed" style="width:78px;color:var(--text-2);font-size:12px">OpenAI</span><input id="keyOpenai" type="password" placeholder="sk-…" /><button class="btn small keysave" data-prov="openai">Save</button><span id="statOpenai" class="pill">not set</span></div>
+      <div class="keyrow"><span class="fixed" style="width:78px;color:var(--text-2);font-size:12px">Google</span><input id="keyGoogle" type="password" placeholder="AIza…" /><button class="btn small keysave" data-prov="google">Save</button><span id="statGoogle" class="pill">not set</span></div>
+    </div>
+    <div class="section">
+      <h3>Default meeting template</h3>
+      <select id="defaultTemplate"></select>
+    </div>
+    <div class="section">
+      <h3>Voice fingerprinting (experimental)</h3>
+      <p class="hint">Fully local. When on, Debrief separates the remote speakers by voice at stop (Others 1, Others 2, …), and remembers anyone you name so they're auto-labelled in future meetings. Open a finished meeting from History to see the split and name each person. First version — accuracy is best with headphones or clean audio.</p>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer"><input type="checkbox" id="voiceId" style="width:auto" /> Identify speakers by voice</label>
+      <div id="voiceprintList" class="vp-list" style="margin-top:10px"></div>
+    </div>
+    <div class="section">
+      <h3>Transcription model (always local)</h3>
+      <p class="hint">small.en is bundled. base.en / medium.en download once on first use. Speed vs accuracy: small.en is fastest, base.en is a good live balance, medium.en is most accurate but slowest (more on-screen delay).</p>
+      <div class="row"><select id="transcriptionModel" style="flex:1"></select><button id="applyTranscription" class="btn small fixed">Apply</button></div>
+      <div id="transcriptionHint" class="muted" style="margin-top:6px"></div>
+    </div>
+    <div class="section">
+      <h3>Custom vocabulary / glossary</h3>
+      <p class="hint">Domain terms and names, one per line, so they transcribe and summarize correctly. For wild mishearings, add aliases after an = sign. Example:<br>ABM = Adabare, a beam<br>MEDDIC<br>Acme Corp</p>
+      <textarea id="glossary" style="min-height:120px;resize:vertical;line-height:1.5" placeholder="ABM = Adabare&#10;BDR&#10;MEDDIC&#10;Acme Corp"></textarea>
+      <div class="row" style="margin-top:8px"><button id="saveGlossary" class="btn small fixed">Save vocabulary</button><span id="glossaryHint" class="muted" style="flex:1"></span></div>
+    </div>
+    <div class="section">
+      <h3>General</h3>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer"><input type="checkbox" id="autoStart" style="width:auto" /> Hands-free auto-start on meeting detection</label>
+      <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer;margin-top:8px"><input type="checkbox" id="splitSpeakers" style="width:auto;margin-top:3px" /> <span>Best-effort split of remote audio into two speakers (pitch-based). Off by default — it can split one voice in two. Leave off to label everyone “Others” until you rename.</span></label>
+      <p class="hint" style="margin-top:10px">On laptop speakers, turn on macOS <b>Voice Isolation</b> (menu bar → Control Center → Microphone Mode → Voice Isolation) for the strongest echo removal. Debrief already requests system echo cancellation; Voice Isolation adds the OS's stronger model. Speaker labels are editable in any transcript — click a speaker name to rename or reassign.</p>
+    </div>
+  </section>
+
+  <div id="emailModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head"><strong>Follow-up email</strong><button id="emailClose" class="btn small ghost">✕</button></div>
+      <div id="emailEngine" class="sum-engine"></div>
+      <label class="field">Subject</label>
+      <input id="emailSubject" type="text" />
+      <label class="field">Body</label>
+      <textarea id="emailBody" style="min-height:240px;line-height:1.5"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button id="emailCopy" class="btn small accent fixed">Copy</button>
+        <button id="emailExport" class="btn small fixed">Export .txt</button>
+        <span style="flex:1"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="crmModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head"><strong>CRM deal notes</strong><button id="crmClose" class="btn small ghost">✕</button></div>
+      <div id="crmEngine" class="sum-engine"></div>
+      <p class="hint" style="margin:0 0 8px">Structured for a HubSpot deal note. Edit before copying.</p>
+      <textarea id="crmBody" style="min-height:240px;line-height:1.5"></textarea>
+      <div class="row" style="margin-top:10px"><button id="crmCopy" class="btn small accent fixed">Copy</button><button id="crmExport" class="btn small fixed">Export .txt</button><span style="flex:1"></span></div>
+    </div>
+  </div>
+
+  <div id="inputModal" class="modal hidden">
+    <div class="modal-card" style="max-width:380px">
+      <div class="modal-head"><strong id="inputTitle">Edit</strong><button id="inputX" class="btn small ghost">✕</button></div>
+      <input id="inputField" type="text" />
+      <div class="row" style="margin-top:12px"><span style="flex:1"></span><button id="inputCancelBtn" class="btn small fixed">Cancel</button><button id="inputOkBtn" class="btn small accent fixed">Save</button></div>
+    </div>
+  </div>
+
+  <div id="spkMenu" class="spk-menu hidden"></div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="../shared/wav.js"></script>
+  <script src="../shared/segmenter.js"></script>
+  <script src="../shared/analytics.js"></script>
+  <script src="../shared/voice-features.js"></script>
+  <script src="../shared/speakers.js"></script>
+  <script src="../shared/bleed.js"></script>
+  <script src="../shared/embed.js"></script>
+  <script src="../shared/tags.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
