@@ -37,14 +37,6 @@ module.exports = {
     startupTimeoutMs: 30000
   },
 
-  // Chunking. Audio is captured at 16 kHz mono in the renderer.
-  audio: {
-    sampleRate: 16000,
-    windowSeconds: 7, // length of each transcription window (renderer is source of truth)
-    overlapSeconds: 1.2, // re-sent at the head of the next window so boundary words aren't lost
-    silenceRms: 0.004 // windows quieter than this are skipped (saves GPU)
-  },
-
   // Where finished session transcripts are written.
   outputDir: path.join(app.getPath('documents'), 'Debrief Sessions'),
 

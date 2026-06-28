@@ -64,7 +64,7 @@ Without a key, Debrief still summarizes — just with the basic local heuristic,
 
 ```bash
 git clone https://github.com/Stallin-Sanamandra/Debrief.git
-cd debrief
+cd Debrief
 npm install
 npm run setup:whisper   # builds a static, Metal-enabled whisper-server + downloads ggml-small.en (~466 MB) into vendor/
 npm start               # run in development

@@ -7,9 +7,9 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 PYUSERBIN="$(python3 -c 'import site,os;print(os.path.join(site.getuserbase(),"bin"))' 2>/dev/null)"
 [ -n "$PYUSERBIN" ] && export PATH="$PATH:$PYUSERBIN"
 
-# Stop any previous Debrief instance + its whisper-server (avoids a second window
-# and a port-8178 conflict). Patterns are specific to this project, not other apps.
-pkill -if "Claude/Projects/Debrief/node_modules/electron" 2>/dev/null
+# Stop any previous Debrief dev instance + its whisper-server (avoids a second window
+# and a port-8178 conflict). Matched by THIS repo's own path, so other apps are untouched.
+pkill -if "$(pwd)/node_modules/electron" 2>/dev/null
 pkill -if "whisper-server" 2>/dev/null
 sleep 1
 

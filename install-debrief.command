@@ -11,7 +11,7 @@ fi
 
 echo "==> Stopping any running Debrief / dev instance / whisper-server"
 pkill -if "/Applications/Debrief.app/Contents/MacOS/Debrief" 2>/dev/null
-pkill -if "Claude/Projects/Debrief/node_modules/electron" 2>/dev/null  # dev (npm start) instance
+pkill -if "$(pwd)/node_modules/electron" 2>/dev/null  # dev (npm start) instance, this repo only
 pkill -if "whisper-server" 2>/dev/null
 sleep 1
 
