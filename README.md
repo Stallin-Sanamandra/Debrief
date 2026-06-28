@@ -2,7 +2,7 @@
 
 **Local-first meeting notes for macOS.** Debrief captures your microphone and the other participants' system audio, transcribes everything **on-device** with Whisper on the Apple Silicon GPU, and turns each meeting into a clean, speaker-labelled transcript with an optional AI summary, action items, follow-up email, and CRM notes.
 
-> ⚠️ **Early personal project, shared for feedback.** This is something I built for my own meetings and am opening up so others can try it and tell me what breaks or what's missing. It is unsigned, Apple-Silicon-only, and rough in places. Please report bugs and ideas in [GitHub Issues](https://github.com/Stallin-Sanamandra/debrief/issues).
+> ⚠️ **Early personal project, shared for feedback.** This is something I built for my own meetings and am opening up so others can try it and tell me what breaks or what's missing. It is unsigned, Apple-Silicon-only, and rough in places. Please report bugs and ideas in [GitHub Issues](https://github.com/Stallin-Sanamandra/Debrief/issues).
 
 ---
 
@@ -32,7 +32,7 @@
 
 ## Install (the easy way — prebuilt DMG)
 
-1. Download `Debrief-1.0.0-arm64.dmg` from the [latest Release](https://github.com/Stallin-Sanamandra/debrief/releases/latest).
+1. Download `Debrief-1.0.0-arm64.dmg` from the [latest Release](https://github.com/Stallin-Sanamandra/Debrief/releases/latest).
 2. Open the DMG and drag **Debrief** to **Applications**.
 3. **Because the app is unsigned**, macOS Gatekeeper will block it the first time. You'll see either *"Debrief is damaged and can't be opened"* or *"can't be opened because Apple cannot check it for malicious software."* Clear the quarantine flag once, in Terminal:
 
@@ -63,7 +63,7 @@ Without a key, Debrief still summarizes — just with the basic local heuristic,
 ## Build from source
 
 ```bash
-git clone https://github.com/Stallin-Sanamandra/debrief.git
+git clone https://github.com/Stallin-Sanamandra/Debrief.git
 cd debrief
 npm install
 npm run setup:whisper   # builds a static, Metal-enabled whisper-server + downloads ggml-small.en (~466 MB) into vendor/
@@ -128,7 +128,7 @@ test/           unit tests for the shared modules
 
 ## Feedback & contributing
 
-This is an early project and feedback is very welcome. Please use **[GitHub Issues](https://github.com/Stallin-Sanamandra/debrief/issues)** to report bugs or request features. Include your macOS version and Mac model, and steps to reproduce.
+This is an early project and feedback is very welcome. Please use **[GitHub Issues](https://github.com/Stallin-Sanamandra/Debrief/issues)** to report bugs or request features. Include your macOS version and Mac model, and steps to reproduce.
 
 ## License
 
